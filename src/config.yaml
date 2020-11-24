@@ -1,0 +1,16 @@
+general:
+  logging_level: INFO
+# CRITICAL
+# ERROR
+# WARNING
+# INFO
+# DEBUG
+# NOTSET
+parameters:
+  w: 0.72
+  c_1: 1.49
+  c_2: 1.49
+  num_particles: 50
+  num_iterations: 200 # Number of generations
+  eid: 1
+  objective_name: "ChungReynoldsFunction"
