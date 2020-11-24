@@ -3,7 +3,6 @@ import matplotlib
 
 DIRS = {'DATA': '../data/', 'IMG': '../img/'}
 DIRS['RESULTS'] = DIRS['DATA']+'results/'
-DIRS['INPUT'] = DIRS['DATA']+'input/'
 DIRS['CONFIGS'] = DIRS['DATA']+'configs/'
 for d in DIRS.values():
     Path(d).mkdir(parents=True, exist_ok=True)
