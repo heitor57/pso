@@ -5,10 +5,6 @@ import itertools
 import lib.utils as utils
 from lib.constants import *
 from collections import OrderedDict
-# from pathlib import Path
-
-
-# Path().mkdir(parents=True, exist_ok=True)
 
 loader = yaml.SafeLoader
 loader.add_implicit_resolver(
@@ -32,11 +28,16 @@ f = open(args.config_file)
 config = OrderedDict(yaml.load(f,Loader=loader))
 
 to_search = {
-    'pheromony_policies': {'AntSystem':{"rho": [0.3,0.5,0.7],
-                                         "Q": [75, 100, 125]}},
-    "selection":{"beta": [3,5,7]},
-    'parameters':{"instance_name": ['lau15','sgb128'],
-                  "eid": list(range(1,NUM_EXECUTIONS+1))},
+    'parameters':{"c_1": [0.5,1,1.5,2],
+                  "c_2": [0.5,1,1.5,2],
+                  "w": [0.4,0.6,0.8],
+                  "eid": list(range(1,NUM_EXECUTIONS+1)),
+                  "topology": ["FullyConnectedTopology",
+                               "VonNeumannTopology",
+                               "RingTopology"],
+                  "objective_name": ["RosenbrockFunction",
+                                     "ChungReynoldsFunction"],
+                  },
 }
 
 keys_to_value, combinations=utils.get_names_combinations(config,to_search)

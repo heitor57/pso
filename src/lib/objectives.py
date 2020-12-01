@@ -10,7 +10,7 @@ class ChungReynoldsFunction:
     def __init__(self):
         self.x_min = -100
         self.x_max = 100
-        self.num_dimensions = 30
+        self.num_dimensions = 20
 
     def compute(self,x):
         return _chung_reynolds_function(x)
@@ -24,7 +24,7 @@ class RosenbrockFunction:
     def __init__(self):
         self.x_min = -30
         self.x_max = 30
-        self.num_dimensions = 30
+        self.num_dimensions = 20
 
     def compute(self,x):
         return _rosenbrock_function(x)
