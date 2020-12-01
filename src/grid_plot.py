@@ -33,14 +33,20 @@ f = open(args.config_file)
 config = yaml.load(f,Loader=loader)
 
 to_search = {
-    'pheromony_policies': {'AntSystem':{"rho": [0.3,0.5,0.7],
-                                         "Q": [75, 100, 125]}},
-    "selection":{"beta": [3,5,7]},
-    'parameters':{
-        # "instance_name": ['lau15','sgb128'],
-                  "eid": list(range(1,NUM_EXECUTIONS+1))},
+    'parameters':{"c_1": [0.5,1,1.5,2],
+                  "c_2": [0.5,1,1.5,2],
+                  "w": [0.4,0.6,0.8],
+                  "eid": list(range(1,NUM_EXECUTIONS+1)),
+                  "topology": ["FullyConnectedTopology",
+                               "VonNeumannTopology",
+                               "RingTopology"],
+                  "objective_name":[
+                  # ["RosenbrockFunction",
+                  "ChungReynoldsFunction",
+                  ],
+                  },
 }
-# parameters_names=['rho','Q','betas','eid']
+
 
 keys_to_value, combinations=utils.get_names_combinations(config,to_search)
 result_df = pd.DataFrame(columns=
@@ -57,12 +63,10 @@ for combination in combinations:
 
         result_df.loc[i,keys[-1]] = v
         
-    ac = AntColony(pheromony_kwargs=config['pheromony_policies'][config['parameters']['pheromony_policy']],
-                   selection_policy_kwargs=config['selection'],
-                   **config['parameters'])
-    df = ac.load_results()
+    pso = PSO(**config['parameters'])
+    df = pso.load_results()
     result_df.loc[i,parameters_names] = combination
-    result_df.loc[i,'Best fitness global'] = df.iloc[-1]['Best fitness global']
+    result_df.loc[i,'Best global fitness'] = df.iloc[-1]['Best global fitness']
     result_df.loc[i,'Best fitness'] = df.iloc[-1]['Best fitness']
     result_df.loc[i,'Mean fitness'] = df.iloc[-1]['Mean fitness']
     result_df.loc[i,'Median fitness'] = df.iloc[-1]['Median fitness']
@@ -76,10 +80,10 @@ with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     pd.set_option('display.expand_frame_repr', False)
     tmp = copy.copy(parameters_names)
     tmp.remove('eid')
-    a=result_df.groupby(list(set(result_df.columns)-{'Best fitness global','Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'})).\
-        agg({i: ['mean','std'] for i in {'Best fitness global', 'Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'}}).\
-        sort_values(by=[('Best fitness global','mean')],ascending=True).reset_index()[tmp+['Best fitness global','Best fitness','Mean fitness','Median fitness','Worst fitness',]].head(TOP_N)
-    open(f"../doc/{config['parameters']['instance_name']}_output.tex",'w').write(a.to_latex())
+    a=result_df.groupby(list(set(result_df.columns)-{'Best global fitness','Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'})).\
+        agg({i: ['mean','std'] for i in {'Best global fitness', 'Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'}}).\
+        sort_values(by=[('Best global fitness','mean')],ascending=True).reset_index()[tmp+['Best global fitness','Best fitness','Mean fitness','Median fitness','Worst fitness',]].head(TOP_N)
+    open(f"../doc/{config['parameters']['objective_name']}_output.tex",'w').write(a.to_latex())
 
 
 # print('Top mean fitness')

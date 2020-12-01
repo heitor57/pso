@@ -34,14 +34,12 @@ class PSO:
 
     def run(self):
         objective = eval(f"objectives.{self.objective_name}()")
-        self.x_min= objective.x_min
-        self.x_max= objective.x_max
-        self.num_dimensions = objective.num_dimensions
+        num_dimensions = objective.num_dimensions
         particles = []
         topology = eval(self.topology)(num_particles=self.num_particles)
         for i in range(self.num_particles):
             particles.append(Particle(objective.x_min,objective.x_max))
-            particles[-1].init_values(self.num_dimensions,objective)
+            particles[-1].init_values(num_dimensions,objective)
         
         for i in range(self.num_particles):
             topology.update_neighborhood_best(i,particles[i])
@@ -59,8 +57,8 @@ class PSO:
             
         for i in progress_bar(range(1,self.num_iterations+1)):
             for j, particle in enumerate(particles):
-                r_1 = np.random.rand(self.num_dimensions)
-                r_2 = np.random.rand(self.num_dimensions)
+                r_1 = np.random.rand(num_dimensions)
+                r_2 = np.random.rand(num_dimensions)
                 particle.velocity=self.w*particle.velocity+\
                     self.c_1*r_1*(particle.best_position - particle.position)+\
                     self.c_2*r_2*(topology.get_best_neighbor_particle(j).best_position - particle.position)
@@ -103,4 +101,5 @@ class PSO:
 
     def load_results(self):
         string = self.get_name()
+        print(string)
         return pd.read_json(string)
