@@ -16,7 +16,7 @@ from lib.utils import *
 # }
 # parameters_names = list(parameters.keys())
 # combinations = itertools.product(*list(parameters.values()))
-args = [(f'python ant_colony.py -c {DIRS["CONFIGS"]}{entry.name}',)
+args = [(f'python pso.py -c {DIRS["CONFIGS"]}{entry.name}',)
         for entry in os.scandir(DIRS['CONFIGS'])]
 # print(args)
-run_parallel(os.system,args,chunksize=1)
+run_parallel(os.system,args,chunksize=20)
