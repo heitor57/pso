@@ -13,7 +13,7 @@ parameters:
   # w: 0.6
   # c_1: 2
   # c_2: 2
-  num_particles: 50
+  num_particles: 80
   num_iterations: 200 # Number of generations
   eid: 1
   # objective_name: "RosenbrockFunction"
