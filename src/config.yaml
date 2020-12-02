@@ -7,9 +7,9 @@ general:
 # DEBUG
 # NOTSET
 parameters:
-  w: 0.72
-  c_1: 1.49
-  c_2: 1.49
+  w: 0.8
+  c_1: 1
+  c_2: 0.5
   # w: 0.6
   # c_1: 2
   # c_2: 2
@@ -18,4 +18,4 @@ parameters:
   eid: 1
   # objective_name: "RosenbrockFunction"
   topology: "FullyConnectedTopology"
-  objective_name: "ChungReynoldsFunction"
+  objective_name: "RosenbrockFunction"

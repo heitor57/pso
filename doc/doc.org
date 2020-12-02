@@ -115,7 +115,7 @@ tal que $-30 \leq x_i \leq 30$ e o mínimo global está localizado em $x^*=f(1,\
 
 * Solução
 
-Para otimização das funções anteriores será utilizado o PSO, como já dito anteriormente. Este é um modelo estocástico e baseado em população, nele nos temos um número de partículas e cada partícula é representada em forma vetorial pela posição no espaço de busca, assim como a velocidade. Cada partícula irá armazenar o melhor "pessoal" dela, isto é, a melhor posição que ela chegou até então (com a melhor aptidão) cite:barrera2016limiting.
+Para otimização das funções anteriores será utilizado o PSO, como já dito anteriormente. Este é um modelo estocástico e baseado em população, nele nos temos um número de partículas e cada partícula é representada em forma vetorial pela posição no espaço de busca, assim como a velocidade. Cada partícula irá armazenar o melhor ''pessoal'' dela, isto é, a melhor posição que ela chegou até então (com a melhor aptidão) cite:barrera2016limiting.
 
 As partículas irão se mover por um processo que incorpora velocidade. A velocidade então será computada através do uso da melhor posição que essa partícula já teve $p_i$ e a posição da melhor partícula vizinha a i. Isto pode ser formalizado como:
 
@@ -153,13 +153,35 @@ Para esse modelo teremos os seguintes parâmetros do PSO:
 | Parâmetro   | Descrição                                                  |
 |-------------+------------------------------------------------------------|
 | #Iterações  | Critério de parada do algoritmo, terminará após #Iterações |
-| #Particulas | Número de partículas a serem utilizadas                    |
+| #Partículas | Número de partículas a serem utilizadas                    |
 | $w$         | Inércia (diversificação)                                   |
 | $c_1$       | Fator que pesa o componente cognitivo (intensificação)     |
 | $c_2$       | Fator que pesa o componente social (intensificação)        |
 | Topologia   | A estrutura de vizinhança das partículas                   |
 
 
+Uma visão geral do algoritmo é descrita no algoritmo ref:alg:pso.
+
+#+begin_export latex
+\begin{algorithm}
+  \caption{Algoritmo PSO}
+  \label{alg:pso}
+  \begin{algorithmic}[1]
+  \State Inicia partículas em uma posição aleátoria e velocidade zero
+  \State Inicia vizinhanças de acordo com a topologia escolhida
+  \For{$t=1$ to \#Iterações}
+  \For{$i=1$ to \#Partículas}
+  \State Computar a velocidade $v_{i}^{t+1} \gets wv_{i}^t + r_1^tc_1(p_i^t-x_i^t) + r_2^tc_2(g_i^t-x_i^t)$
+  \State Computar a posição de acordo com a velocidade anterior $x^{t+1} \gets x^{t} + v^{t+1}$
+  \If{$f(x) < f(p_i)$}
+  \State $p_i^{t+1} \gets x$
+  \State Atualize $g$ utilizando como informação $i$, $x$ e $f(x)$ e de acordo com uma regra da topologia
+  \EndIf
+  \EndFor
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
+#+end_export
 * Resultados
 
 Para a análise de resultados foi utilizado 10 execuções para cada conjunto de parâmetro, já que o modelo é estocástico é importante sempre sumarizar os resultados de varias execuções para ter uma ideia do resultado esperado.
@@ -197,15 +219,15 @@ Para os outros parâmetros foram escolhidos domínios representam aproximadament
 
 Depois da execução o top-15 parâmetros, de cada instância, são descritos nas tabelas ref:tab:chungreynoldsfunction e ref:tab:rosenbrockfunction, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima iteração de cada execução.
 
-A coluna "Melhor aptidão global" descreve o melhor valor obtido na ultima iteração, de todas soluções obtidas durante toda execução do PSO.
+A coluna ''Melhor aptidão global'' descreve o melhor valor obtido na ultima iteração, de todas soluções obtidas durante toda execução do PSO.
 
-"Melhor aptidão" descreve a melhor valor obtido nas partículas da última iteração (o valor objetivo da posição atual, não a melhor posição conhecida pela partícula), as outras colunas seguem a mesma lógica.
+''Melhor aptidão'' descreve a melhor valor obtido nas partículas da última iteração (o valor objetivo da posição atual, não a melhor posição conhecida pela partícula), as outras colunas seguem a mesma lógica.
 
 ** Experimento fatorial
 
 Primeiro, começando pela função visivelmente mais simples, a função de Chung Reynolds. Podemos ver que a maior parte dos parâmetros se deram melhor com a topologia totalmente conectada (abreviada para TC), assim como valores extremamente baixos para a função foram obtidos, porém não chegou no ótimo que é 0. Um ponto geral a se notar é que a aptidão média e mediana são bem próximas o que mostra uma pouca diversidade e alto convergimento para um ponto por todas partículas, assim como esperado dessa topologia, e até mesmo o pior valor é extremamente próximo do melhor, tendo poucas variações. 
 
-É possível ver que o melhor conjunto de parâmetros tem um direcionamento maior na solução global já que $c_2=1.5$ e um pouco menos em solução local pelo $c_1$, porém o $w$ é o menor dos valores disponíveis para esse parâmetro indicando que foi melhor balancear através desse parâmetro a aplicação da busca local, como ele é o menor então foi favorecido mais busca local.
+É possível ver que o melhor conjunto de parâmetros tem um direcionamento maior na solução global já que $c_2=1.5$ e um pouco menos em solução local pelo $c_1$, porém o $w$ é o menor dos valores disponíveis para esse parâmetro indicando que ele serviu para balancear e favorecer mais busca local, já que só observando os parâmetros anteriores há mais favorecimento na busca global, então com isso há mais balanceamento de ambas intensificações.
 
 Um ponto interessante que os melhores conjuntos de parâmetros são bem similares entre si, indicando que esse problema precisa de certas características na busca que foram descritas anteriormente.
 
