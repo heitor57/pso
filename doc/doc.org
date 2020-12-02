@@ -1,0 +1,180 @@
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [twocolumn]
+#+TITLE: Particle Swarm Optimization
+#+SUBTITLE: Algoritmos Bioinspirados
+#+AUTHOR: Heitor Lourenço Werneck
+#+EMAIL: heitorwerneck@hotmail.com
+#+DATE: 
+#+LANGUAGE: pt
+#+OPTIONS: ^:nil email:nil author:nil toc:nil
+#+LATEX_HEADER: \author{Heitor Lourenço Werneck \\{\href{mailto:heitorwerneck@hotmail.com}{heitorwerneck@hotmail.com}}}
+#+LATEX_HEADER: \usepackage[AUTO]{babel}
+# mathtools ja inclui amsmath #+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage[binary-units=true]{siunitx}
+#+LATEX_HEADER: \usepackage[top=0.5cm,bottom=1.5cm,left=2cm,right=2cm]{geometry}
+#+LATEX_HEADER: \usepackage{mdframed}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage[Algoritmo]{algorithm}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{colortbl}
+#+LATEX_HEADER: \usepackage{graphicx,wrapfig,lipsum}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \usepackage{subfigure}
+#+LATEX_HEADER: \usepackage{rotating}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{tablefootnote}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{dblfloatfix}
+#+LATEX_HEADER: \usepackage{color, colortbl}
+#+LATEX_HEADER: \usepackage{chngcntr}
+#+LATEX_HEADER: \usepackage{epstopdf}
+#+LATEX_HEADER: \usepackage{comment}
+#+LATEX_HEADER: \usepackage{float}
+#+LATEX_HEADER: \usepackage{booktabs}
+
+
+#+latex_class_options: [11pt]
+
+#+PROPERTY: header-args :eval no-export
+#+BEGIN_EXPORT latex
+\usetikzlibrary{arrows, fit, matrix, positioning, shapes, backgrounds,intersections}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{calc}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=bg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+\numberwithin{equation}{section}
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [ellipse, draw, fill=red!20, 
+    text width=5em, text centered, rounded corners, minimum height=2em]
+%\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3.5cm,
+%    minimum height=2em]
+
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% Numbering fix
+\counterwithout{equation}{section} % undo numbering system provided by phstyle.cls
+%\counterwithin{equation}{chapter}  % implement desired numbering system
+	
+\definecolor{Gray}{gray}{0.9}
+#+END_EXPORT
+
+
+* Introdução
+
+
+Otimização por Enxame de Partículas (Particle Swarm Optimization - PSO) é uma meta-heurística baseada em população, para otimização, sendo um dos algoritmos mais populares para otimização. A ideia geral é baseada em padrões da natureza, como por exemplo o enxame de pássaros. PSO é inspirado no comportamento social e cooperativo exibido na natureza por diversas espécies. Diferentemente de algoritmos genéticos, programação evolucionaria e estratégias de evolução no PSO não há o operador de seleção cite:shi1999empirical.
+
+As aplicações do PSO são diversas, assim como diversas outras meta-heurísticas, um exemplo delas são: clustering cite:chenil_partic; redes distribuídas cite:ren05_trans e outros cite:poli08_analy_public_applic_partic_swarm_optim.
+
+Esse trabalho consiste na implementação e análise de um algoritmo de PSO para minimização das funções de Chung Reynolds e Rosenbrock cite:momin2013literature.
+
+* Problema
+
+Então como já dito anteriormente o trabalho erá a minimização de funções, essas funções tem um valor ótimo e um espaço de busca, assim como um número de dimensões a ser definido. Mais especificamente a função de Chung Reynolds é definida como a seguir:
+
+#+begin_export latex
+\begin{equation}
+f(x) = (\sum_{i=1}^{D}x_i^2)^2
+\end{equation}
+#+end_export
+
+tal que $-100 \leq x_i \leq 100$ e o mínimo global está localizado em $x^*=f(0,\cdots,0)$, $f(x^*)=0$. E a função de Rosenbrock:
+
+#+begin_export latex
+\begin{equation}
+f(x) = \sum_{i=1}^{D-1}[ 100(x_{i+1} - x_i^2)^2 + (x_i -1)^2]
+\end{equation}
+#+end_export
+
+tal que $-30 \leq x_i \leq 30$ e o mínimo global está localizado em $x^*=f(1,\cdots,1)$, $f(x^*)=0$. O D é o número de dimensões, neste trabalho será usado $D=20$ (20 dimensões).
+
+* Solução
+
+Para otimização das funções anteriores será utilizado o PSO, como já dito anteriormente. Este é um modelo estocástico e baseado em população, nele nos temos um número de partículas e cada partícula é representada em forma vetorial pela posição no espaço de busca, assim como a velocidade. Cada partícula irá armazenar o melhor "pessoal" dela, isto é, a melhor posição que ela chegou até então (com a melhor aptidão) cite:barrera2016limiting.
+
+As partículas irão se mover por um processo que incorpora velocidade. A velocidade então será computada através do uso da melhor posição que essa partícula já teve $p_i$ e a posição da melhor partícula vizinha a i. Isto pode ser formalizado como:
+
+#+begin_export latex
+\begin{equation}
+v_{i}^{t+1} = wv_{i}^t + r_1^tc_1(p_i^t-x_i^t) + r_2^tc_2(g_i^t-x_i^t)
+\end{equation}
+#+end_export
+
+Sendo $w$ um fator de inércia, esse fator quando grande ajuda na procura global enquanto um valor pequeno ajuda na busca local cite:shi1999empirical, $r_1$ e $r_2$ são $D$ amostras no domínio $[0,1]$, $c_1$ é uma constante que da o peso ao fator cognitivo, $c_2$ é uma constante que da o peso ao fator social. O componente social e cognitivo são responsáveis pela intensificação e a primeira parte, velocidade multiplicado com inércia, é responsável pela diversificação. $x_i$ é a posição da partícula, $v_{i}$ a velocidade, $p_i$ a melhor posição da partícula $i$, $g_i$ a melhor posição na vizinhança da partícula $i$ (irá depender da topologia).
+
+Com essa velocidade é possível computar a próxima posição da partícula, dado pela equação abaixo:
+
+#+begin_export latex
+\begin{equation}
+x^{t+1} = x^{t} + v^{t+1}
+\end{equation}
+#+end_export
+
+Para manutenção de uma boa busca foi utilizado uma restrição no máximo e mínimo da posição de cada partícula de acordo com a função a ser minimizada. A restrição sobre a velocidade também foi testada, porém para simplificação foi utilizado a não restrição, pois generalizou melhor para as funções.
+
+Para a definição de $g_i$ foram utilizadas algumas topologias básicas, ilustradas abaixo:
+
+#+attr_latex: :width 300px
+#+CAPTION: Representação das topologias: (1) completamente conectada, (2) anel, (3) von Neumann.
+[[../img/topologies.png]]
+
+No caso da topologia completamente conectada as partículas terão o mesmo $g_i$ já que todas são vizinhas de todas. Na anel a vizinhança de uma partícula será duas outras partículas. Na von Neumann (Toroidal) toda partícula é conectada com outras 4 partículas. Todas definições de vizinhança são feitas com base no índice, ou seja, não e pela informação espacial assim como no artigo cite:09_compar_study_of_neigh_topol. As topologias podem ser facilmente definidas utilizando $x+i mod \#Particulas$, com $i$ sendo um valor limitado superiormente e inferiormente pela metade positiva e negativa do número de vizinhos possíveis em cada topologia. Na implementação otimizações foram feitas em cada topologia, não utilizando uma abordagem generalista que seria ineficiente.
+
+É importante notar que em cite:09_compar_study_of_neigh_topol as topologias são indicadas como são essenciais em PSO, então é importante pelo menos variar esse fator para ver se o problema é mais adequado a alguma topologia.
+
+Para esse modelo teremos os seguintes parâmetros do PSO:
+
+#+CAPTION: Parâmetros.
+| Parâmetro   | Descrição                                                  |
+|-------------+------------------------------------------------------------|
+| #Iterações  | Críterio de parada do algoritmo, terminará após #Iterações |
+| #Particulas | Número de partículas a serem utilizadas                    |
+| $w$         | Inércia (diversificação)                                   |
+| $c_1$       | Fator que pesa o componente cognitivo (intensificação)     |
+| $c_2$       | Fator que pesa o componente social (intensificação)        |
+| Topologia   | A estrutura de vizinhança das partículas                   |
+
+
+* Resultados
+
+Para a análise de resultados foi utilizado 10 execuções para cada conjunto de parâmetro, já que o modelo é estocástico é importante sempre sumarizar os resultados de varias execuções para ter uma ideia do resultado esperado.
+
+Foram utilizadas as funções já mencionadas anteriormente, que estão também apresentadas na tabela a seguir cite:momin2013literature:
+
+
+#+CAPTION: Características das instâncias.
+#+ATTR_LATEX: :align |l|l|l|l|l|
+| Função                                                         | Mínimo | Máximo | Solução             | Valor      |
+|----------------------------------------------------------------+--------+--------+---------------------+------------|
+| $f(x) = (\sum_{i=1}^{D}x_i^2)^2$                               |   -100 |    100 | $x^*=f(0,\cdots,0)$ | $f(x^*)=0$ |
+| $f(x) = \sum_{i=1}^{D-1}[ 100(x_{i+1} - x_i^2)^2 + (x_i -1)^2$ |    -30 |     30 | $x^*=f(1,\cdots,1)]$ | $f(x^*)=0$ |
+
+
+
+bibliography:doc.bib
+bibliographystyle:plain
