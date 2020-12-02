@@ -41,8 +41,8 @@ to_search = {
                                "VonNeumannTopology",
                                "RingTopology"],
                   "objective_name":[
-                  # ["RosenbrockFunction",
-                  "ChungReynoldsFunction",
+                  "RosenbrockFunction",
+                  # "ChungReynoldsFunction",
                   ],
                   },
 }

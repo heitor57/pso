@@ -195,7 +195,7 @@ Para o começo da análise um experimento fatorial completo será realizado em c
 
 Para os outros parâmetros foram escolhidos domínios representam aproximadamente valores de sucesso em execuções na literatura, variando tanto intensificação quanto diversificação.
 
-Depois da execução o top-15 parâmetros, de cada instância, são descritos nas tabelas ref:tab:sgb128_results e ref:tab:lau15_results, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima iteração de cada execução.
+Depois da execução o top-15 parâmetros, de cada instância, são descritos nas tabelas ref:tab:chungreynoldsfunction e ref:tab:rosenbrockfunction, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima iteração de cada execução.
 
 A coluna "Melhor aptidão global" descreve o melhor valor obtido na ultima iteração, de todas soluções obtidas durante toda execução do PSO.
 
@@ -203,15 +203,27 @@ A coluna "Melhor aptidão global" descreve o melhor valor obtido na ultima itera
 
 ** Experimento fatorial
 
+Primeiro, começando pela função visivelmente mais simples, a função de Chung Reynolds. Podemos ver que a maior parte dos parâmetros se deram melhor com a topologia totalmente conectada (abreviada para TC), assim como valores extremamente baixos para a função foram obtidos, porém não chegou no ótimo que é 0. Um ponto geral a se notar é que a aptidão média e mediana são bem próximas o que mostra uma pouca diversidade e alto convergimento para um ponto por todas partículas, assim como esperado dessa topologia, e até mesmo o pior valor é extremamente próximo do melhor, tendo poucas variações. 
+
+É possível ver que o melhor conjunto de parâmetros tem um direcionamento maior na solução global já que $c_2=1.5$ e um pouco menos em solução local pelo $c_1$, porém o $w$ é o menor dos valores disponíveis para esse parâmetro indicando que foi melhor balancear através desse parâmetro a aplicação da busca local, como ele é o menor então foi favorecido mais busca local.
+
+Um ponto interessante que os melhores conjuntos de parâmetros são bem similares entre si, indicando que esse problema precisa de certas características na busca que foram descritas anteriormente.
 
    #+begin_export latex
       \begin{table}[H]
         \centering
 \tiny
        \input{ChungReynoldsFunction_output.tex}
-       \caption{Resultados da função de Chung reynolds.}
+       \caption{Resultados da função de Chung Reynolds.}
        \label{tab:chungreynoldsfunction}
       \end{table}
+      #+end_export
+ 
+Para a função de Rosenbrock, ligeiramente mais complexa valores grandes foram obtidos, distantes do ótimo comparado com a outra função, porém de acordo com a literatura são valores bons cite:shi1999empirical. O primeiro ponto que se nota é que a topologia de Von Neumann foi a melhor, ou seja, comprovando que a topologia depende da função a ser minimizada e de acordo com a literatura cite:09_compar_study_of_neigh_topol. O melhor conjunto de parâmetro possui uma melhor aptidão global significativamente melhor que a melhor solução da topologia TC, mostrando a efetividade da topologia nesse cenário.
+
+A aptidão média e mediana se diferenciam significativamente, indicando a presença de outliers que são confirmados pela coluna de pior aptidão, isso é uma característica dessa topologia já que grupos vão buscar em locais diferentes o que pode gerar grande diversidade em soluções encontradas assim gerando outliers, porém pode se ver que esse comportamento ocorreu na topologia TC, o que indica alguma característica do problema, que talvez seja extremamente restrito e pequenos passos levem a grandes diferenças no valor da solução, também outro ponto que o ajudaria a ter soluções tão diversas são seus parâmetros que indicam uma grande diversificação e pouco foco no componente social($c_1=1,c_2=0.5,w=0.8$). Isso indica que o TC tentou fazer uma diversificação que não é seu forte, enquanto isso a topologia Von Neumann conseguiu convergir muito mais organicamente sem outliers tão extremos, porém sempre com a população diversa. 
+
+   #+begin_export latex
 
       \begin{table}[H]
         \centering
@@ -221,6 +233,18 @@ A coluna "Melhor aptidão global" descreve o melhor valor obtido na ultima itera
        \label{tab:rosenbrockfunction}
       \end{table}
    #+end_export
+
+Um ponto a se acrescentar é que o Anel não apareceu no top-15 nenhuma vez, isso indica que ele não se encaixa tanto nesses problemas, o que é normal, talvez em trabalhos futuros com outras funções ele possa ser o melhor.
+
+** Análise das melhores soluções
+
+* Conclusão
+
+Com esse trabalho foi possível ver na prática a efetividade do PSO para solucionar 2 funções da literatura, indicando sua efetividade.
+
+Diversas análises foram feitas sobre os parâmetros, seus impactos, como eles funcionam e se comportam. Assim como características das topologias e outros.
+
+Em trabalhos futuros métodos mais elaborados, com limitação de velocidade, atribuição dinâmica de alguns parâmetros e topologias dinâmicas com informação espacial podem ser feitas para comparar e gerar ainda mais ideias relevantes para a área de otimização.
 
 bibliography:doc.bib
 bibliographystyle:plain
