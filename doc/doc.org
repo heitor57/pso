@@ -238,6 +238,32 @@ Um ponto a se acrescentar é que o Anel não apareceu no top-15 nenhuma vez, iss
 
 ** Análise das melhores soluções
 
+Na figura ref:fig:chunreybest é possível ver que o PSO converge rapidamente para um ponto muito baixo, isso mostra que a intensificação feita está sendo muito forte e consegue convergir facilmente para um valor bem baixo, como a função a ser minimizada é extremamente simples então não há muita necessidade de diversificação para procura muito dispersa no espaço de soluções e a topologia completamente conectada é ideal e domina por grande margem as outras duas topologias. È possível ver que não há muita diferença na convergência entre execuções também.
+
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/ChungReynoldsFunction_1_1.5_0.4_FullyConnectedTopology_me.eps}
+	\includegraphics[scale=0.5]{../img/ChungReynoldsFunction_1_1.5_0.4_FullyConnectedTopology_mmb.eps}
+	\caption{Execuções do melhor conjunto de parâmetros da função Chung Reynolds.}
+	\label{fig:chunreybest}
+\end{figure}
+#+end_export
+
+Na figura ref:fig:rosenbrockbest já é possível ver diversas questões que são próprias, além da função que é complexa, a topologia usada, a pior aptidão demora um tempo a chegar próximo de todas outras soluções, que mostra um caso perfeitamente possível e que é comum de algum grupo de partículas ficarem um pouco abandonadas, porém com a transmissão de informação através da rede de vizinhos as partículas conseguem ir direcionando a boas soluções, para esse problema que é uma função mais complexa que a anterior, uma diversificação no espaço de soluções é o ideal e é isso que é possível observar nesses gráficos. Se formos prestar atenção aos pequenos detalhes é possível ver que a curva da melhor aptidão até virar uma reta é extremamente arrendondada mostrando um nível de intensificação não tão grande. No problema anterior tivemos um nível maior de intensificação e a curva está mais para uma reta.
+
+
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/RosenbrockFunction_1.5_1_0.6_FullyConnectedTopology_me.eps}
+	\includegraphics[scale=0.5]{../img/RosenbrockFunction_1.5_1_0.6_FullyConnectedTopology_mmb.eps}
+	\caption{Execuções do melhor conjunto de parâmetros da função Rosenbrock.}
+	\label{fig:rosenbrockbest}
+\end{figure}
+#+end_export
+
+
 * Conclusão
 
 Com esse trabalho foi possível ver na prática a efetividade do PSO para solucionar 2 funções da literatura, indicando sua efetividade.

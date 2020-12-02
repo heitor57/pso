@@ -29,6 +29,7 @@ ax.set_ylabel("Aptidão")
 ax.set_xlabel("Iteração")
 ax.legend()
 fig.savefig(f"{DIRS['IMG']}{pso.objective_name}_{pso.c_1}_{pso.c_2}_{pso.w}_{pso.topology}_mmb.eps",bbox_inches="tight")
+fig.savefig(f"{DIRS['IMG']}{pso.objective_name}_{pso.c_1}_{pso.c_2}_{pso.w}_{pso.topology}_mmb.png",bbox_inches="tight")
 # fig.savefig(f"{DIRS['IMG']}{pso.instance_name}_{pso.pheromony_kwargs['rho']}_{pso.pheromony_kwargs['Q']}_{pso.selection_policy_kwargs['beta']}_mean_and_median_and_best.png",bbox_inches="tight")
 
 fig, ax = plt.subplots()
@@ -44,6 +45,7 @@ ax.set_xlabel("Iteração")
 ax.legend()
 
 fig.savefig(f"{DIRS['IMG']}{pso.objective_name}_{pso.c_1}_{pso.c_2}_{pso.w}_{pso.topology}_me.eps",bbox_inches="tight")
+fig.savefig(f"{DIRS['IMG']}{pso.objective_name}_{pso.c_1}_{pso.c_2}_{pso.w}_{pso.topology}_me.png",bbox_inches="tight")
 
 # dfs.append(df)
     # Path(os.path.dirname(DIRS['DATA']+name)).mkdir(parents=True, exist_ok=True)
